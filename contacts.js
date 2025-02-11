@@ -12,28 +12,31 @@ console.log("Path către contacts.json:", contactsPath.green);
 
 export async function listContacts() {
     try {
-        const data = await fs.readFile(contactsPath, "utf-8");
-        return JSON.parse(data);
+        const data = await fs.readFile(contactsPath, "utf-8"); 
+        return JSON.parse(data); 
     } catch (error) {
-        console.error("Eroare la citirea fișierului contacts.json:".bgRed.white, error);
-        return [];
+        console.error("Eroare la citirea fișierului contacts.json:", error);
+        return []; 
     }
 }
+
 
 export async function addContact(name, email, phone) {
     try {
         const contacts = await listContacts(); 
-        const newContact = { id: uuidv4(), name, email, phone };
+        const newContact = { id: uuidv4(), name, email, phone }; 
 
         contacts.push(newContact); 
-        await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2)); 
 
-        console.log("Contact adăugat cu succes:".green, newContact);
+        await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+        console.log("Contact adăugat:", newContact);
+
         return newContact;
     } catch (error) {
-        console.log("Eroare la adăugarea contactului!".bgRed.white, error);
+        console.error("Eroare la adăugarea contactului:", error);
     }
 }
+
 
 export async function getContactByID(contactId) {
     try {
@@ -54,19 +57,19 @@ export async function getContactByID(contactId) {
 
 export async function removeContact(contactId) {
     try {
-        let contacts = await listContacts();
+        let contacts = await listContacts(); 
         const initialLength = contacts.length;
 
         contacts = contacts.filter(contact => String(contact.id) !== String(contactId));
 
         if (contacts.length === initialLength) {
-            console.log("Contactul nu a fost găsit!".yellow);
+            console.log("Contactul nu a fost găsit!");
             return;
         }
 
         await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-        console.log("Contact șters cu succes!".red);
+        console.log("Contact șters cu succes!");
     } catch (error) {
-        console.log("Eroare la ștergerea contactului!".bgRed.white, error);
+        console.error("Eroare la ștergerea contactului:", error);
     }
 }
